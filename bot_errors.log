@@ -1,0 +1,5 @@
+2026-09-16 20:31:50,980 - ERROR - Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x1205d9010>
+2026-09-16 20:31:50,982 - ERROR - Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x1205a29d0>, 33543.899196708)])']
+connector: <aiohttp.connector.TCPConnector object at 0x1205d8950>

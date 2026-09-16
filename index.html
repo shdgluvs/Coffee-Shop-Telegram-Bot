@@ -1,0 +1,68 @@
+<!--
+    Основной интерфейс Telegram-бота.
+    Содержит в себе сетку меню, корзину и логику отправки данных заказа в бот.
+-->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Кофейня Orange</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <h1>Меню напитков</h1>
+    <p>Для добавления сахара или корицы укажите комментарий при оплате.</p>
+    <div id="menu-container"></div>
+    <div id="product-modal" style="display: none;">
+        <h3 id="modal-title">Заголовок</h3>
+        <p id="modal-description">Описание</p>
+        <button id="modal-close-btn">Закрыть</button>
+    </div>
+    <script>
+        const modalWindow = document.getElementById("product-modal")
+        const closeButton = document.getElementById("modal-close-btn")
+
+        closeButton.onclick = function() {
+            modalWindow.style.display = 'none';
+        };
+
+        async function loadMenu() {
+            const response = await fetch("menu.json");
+            const menuData = await response.json();
+            
+            const drinks = menuData.classic_drinks.items;
+
+            const container = document.getElementById("menu-container");
+
+            drinks.forEach(product => {
+                const card = document.createElement("div");
+                card.style.cursor = "pointer";
+                card.style.border = "1px solid black";
+                card.style.padding = "10px";
+                card.style.marginBottom = "10px";
+                card.style.width = "150px";
+                
+                const sizeObjects = Object.values(product.sizes);
+                const allPrices = sizeObjects.map(size => size.price);
+                const minPrices = Math.min(...allPrices);
+
+                card.innerHTML = `
+                    <h4>${product.name}</h4>
+                    <p>от ${minPrices} ₽ →</p>
+                `;
+
+                card.onclick = function () {
+                    document.getElementById("modal-title").innerText = product.name;
+                    document.getElementById("modal-description").innerText = product.description;
+                    modalWindow.style.display = "block";
+                };
+
+                container.appendChild(card)
+            });
+        };
+
+        loadMenu()
+
+    </script>
+</body>
+</html>
